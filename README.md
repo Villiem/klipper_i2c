@@ -16,13 +16,13 @@ This guide is aimed towards i2c temp sensors, but should work for most i2c devic
 Normal thermistors are perfectly fine and easy to setup but most sensors allow you to track temperatures, humidity and in some cases VOC's.
 
 ### Example 
-[](/)
+![](/images/chamber-dashboard.png)
 
 ## Connection.
 All the i2c sensors use 4 cables, VCC, GND, SDA, SCL.
 if your sensor has more ignore them.
 
-[]()
+![](/images/mount.jpeg)
 
 ### **IMPORTANT**
 Some sensors use 3.3V or 5V. PLEASE double check voltages, some boards like de CB1 have an output of 1.8V instead of 3.3v in some pins (dunno why).
@@ -30,23 +30,32 @@ Some sensors use 3.3V or 5V. PLEASE double check voltages, some boards like de C
 
 ### If using a raspberry pi
 Easiest to setup.
+
 VCC -> 3.3V (or 5v)
+
 GND -> any gnd pin
+
 SDA -> PIN3
+
 SCL -> PIN5
 
-[]()
+![](/images/pi-wiring.png)
 ### If using a CB1
+
 VCC -> 3.3V or 5V (Remember sometimes this board uses 1.8v instead of 3.3v)
+
 GND -> Any ground pin
+
 SDA -> pin 10
+
 SDL -> pin 8
 
-[]()
+![](/images/cb1-wiring.png)
 ### If using a pico
+
 Any sda and scl pin should work. I used pin 1 and 2.
-https://service.robots.org.nz/wiki/attach/RaspberryPiPico/Raspberry-Pi-Pico-pinout-diagram.svg
-[]()
+
+![](https://service.robots.org.nz/wiki/attach/RaspberryPiPico/Raspberry-Pi-Pico-pinout-diagram.svg)
 
 
 ## Config
@@ -78,13 +87,19 @@ or if using more than one, separate them with a space
 i.e.
 overlays=light tft35_spi
 
-2. Come back after everything is set, and type
+I used
+```
+sudo nano /boot/BoardEnv.txt
+```
+ctrl+x and hit yes
+
+3. Come back after everything is set, and type
 ```
 cat /sys/kernel/debug/gpio
 ```
 you should see klipper is using the pins
 
-[]()cb1-cmd-pins
+![](/images/cb1-gpio.png)
 
 ### Pico
 
@@ -97,7 +112,7 @@ https://www.klipper3d.org/Measuring_Resonances.html?h=pico#flash-the-pico-firmwa
 
 go to the config in mainsail/fluidd and make a new file like bme.cfg and copy
 ### RPi
-
+```
 [mcu rpi] # Not needed if used before
 serial: /tmp/klipper_host_mcu 
 
@@ -124,9 +139,10 @@ gcode:
             sensor.pressure,
             sensor.humidity,
             sensor.gas_level))}
-
+```
 
 ### CB1
+```
 [mcu host]
 serial: /tmp/klipper_host_mcu
 
@@ -155,9 +171,9 @@ gcode:
             sensor.pressure,
             sensor.humidity,
             sensor.gas_level))}
-
+```
 ### pico
-
+```
 [mcu rp2040]
 serial: /dev/serial/by-id/<YourDevice>
 [temperature_sensor chamber]
@@ -179,6 +195,9 @@ gcode:
             sensor.pressure,
             sensor.humidity,
             sensor.gas_level))}
+```
 
-### Add the file to printer.cfg and you should be able to see your sensor in the dashboard n.n
+### Add [include bme.cfg] to your printer.cfg and you should be able to see your sensor in the dashboard n.n
+
+
 
